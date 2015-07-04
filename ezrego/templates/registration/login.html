@@ -1,0 +1,35 @@
+<h1>Log in</h1>
+
+<div>
+<form class="form-horizontal" action="{% url 'loginv' %}" method="post">
+{% csrf_token %}
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ form.username.id_for_label }}">
+	Email</label>
+	<div class="col-xs-10">
+	<input class="form-control" type="text" maxlength="64" id="id_username" name="username" />
+	<span class="help-block">{{ form.username.errors }}</span>
+	</div>
+</div>
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ form.password.id_for_label }}">
+	Password</label>
+	<div class="col-xs-10">
+	<input class="form-control" type="password" maxlength="64" id="id_password" name="password" />
+	<span class="help-block">{{ form.password.errors }}</span>
+	</div>
+</div>
+<div class="form-group">
+	<div class="col-xs-offset-2 col-xs-10">
+	<input class="btn btn-primary" type="submit" value="Go" />
+	</div>
+</div>
+</form>
+</div>
+
+{% if badlogin %}
+<p>Bad log in, try again<p>
+{% endif %}
+
+<p><a href="/govhack2015">Home</a></p>
+

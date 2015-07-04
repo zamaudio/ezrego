@@ -1,0 +1,30 @@
+
+<h1>Sell a vehicle</h1>
+<p>The following form is for transferring a vehicle which you own to someone else.</p>
+
+<p>Step 1: Fill out the form.<br/>
+Step 2: Get your Transfer Code.<br/>
+Step 3: Send your Transfer Code to the buyer so that he/she can verify as a legitimate buyer of your vehicle.<br/>
+Step 4: Wait for email verification that the buyer has completed the transaction.</p>
+
+<div>
+<form action="{% url 'sellerintent' %}" method="post">
+{% csrf_token %}
+{% for field in form %}
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ field.id_for_label }}">
+	{{ field.label }}</label>
+	<div class="col-xs-10">
+	{{ field }}
+	<span class="help-block">{{ field.errors }}</span>
+	</div>
+</div>
+{% endfor %}
+<div class="form-group">
+	<div class="col-xs-offset-2 col-xs-10">
+	<input class="btn btn-primary" type="submit" value="Submit" />
+	</div>
+</div>
+</form>
+</div>
+

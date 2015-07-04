@@ -1,0 +1,36 @@
+
+{% if thanks %}
+<h1>Thanks for registering,  {{ email }}!</h1>
+<p>Please <a href="{% url 'loginv' %}">Log in</a> using your email and password</p>
+
+{% else %}
+<h1>Register</h1>
+<div>
+<form class="form-horizontal" action="{% url 'register' %}" method="post">
+{% csrf_token %}
+{% for field in form %}
+{% if not field.is_hidden %}
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ field.id_for_label }}">
+	{{ field.label }}</label>
+	<div class="col-xs-10">
+	{{ field }}
+	<span class="help-block">{{ field.errors }}</span>
+	</div>	
+</div>
+{% else %}
+{{ field.as_hidden }}
+{% endif %}
+{% endfor %}
+<div class="form-group">
+	<div class="col-xs-offset-2 col-xs-10">
+	<input class="btn btn-primary" type="submit" value="Done" />
+	<input type="hidden" id="id_state" name="state" value="0"/>
+	</div>
+</div>
+</form>
+</div>
+{% endif %}
+
+<a href="/govhack2015">Back</a>
+

@@ -1,5 +1,13 @@
 <h1>EZRego</h1>
 
+{% if request.user %}
+
 <p><a href="{% url 'sellerintent' %}">Sell a vehicle</a></p>
 
 <p><a href="{% url 'buyavehicle' %}">Buy a vehicle</a></p>
+
+{% else %}
+
+<p><a href="{% url 'register' %}">Register for EZRego</a></p>
+
+{% endif %}
