@@ -1,0 +1,98 @@
+{% if state0 %}
+<h1>Please enter your Transfer Code</h1>
+<div>
+<form class="form-horizontal" action="{% url 'buyavehicle' %}" method="post">
+{% csrf_token %}
+{% for field in form %}
+{% if not field.is_hidden %}
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ field.id_for_label }}">
+	{{ field.label }}</label>
+	<div class="col-xs-10">
+	{{ field }}
+	<span class="help-block">{{ field.errors }}</span>
+	</div>	
+</div>
+{% else %}
+{{ field.as_hidden }}
+{% endif %}
+{% endfor %}
+<div class="form-group">
+	<div class="col-xs-offset-2 col-xs-10">
+	<input type="hidden" id="id_state" name="state" value="0"/>
+	<input class="btn btn-primary" type="submit" value="Done" />
+	</div>
+</div>
+</form>
+</div>
+
+{% if failed %}
+<p>Sorry, you entered an invalid Transfer Code, please try again.<p>
+{% endif %}
+
+{% elif state1 %}
+<h1>Please complete the following details</h1>
+<p>To complete the transaction of transfer please fill out the following:<p>
+<p>Please note that if you close this window before submitting the form,
+the system will not finalise the transaction and your Transfer Code will still be valid.</p>
+
+<div>
+<form class="form-horizontal" action="{% url 'buyavehicle' %}" method="post">
+{% csrf_token %}
+{% for field in form %}
+{% if not field.is_hidden %}
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ field.id_for_label }}">
+	{{ field.label }}</label>
+	<div class="col-xs-10">
+	{{ field }}
+	<span class="help-block">{{ field.errors }}</span>
+	</div>	
+</div>
+{% else %}
+{{ field.as_hidden }}
+{% endif %}
+{% endfor %}
+<div class="form-group">
+	<div class="col-xs-offset-2 col-xs-10">
+	<input type="hidden" id="id_state" name="state" value="1"/>
+	<input class="btn btn-primary" type="submit" value="Done" />
+	</div>
+</div>
+</form>
+</div>
+
+{% elif state2 %}
+<h1>Thank you for finalising the transaction, you are now the new owner of the vehicle</h1>
+<p><a href="{% url 'logoutv' %}">Log out</a></p>
+
+{% else %}
+<h1>Please enter your Transfer Code</h1>
+<div>
+<form class="form-horizontal" action="{% url 'buyavehicle' %}" method="post">
+{% csrf_token %}
+{% for field in form %}
+{% if not field.is_hidden %}
+<div class="form-group has-error">
+	<label class="col-xs-2 control-label" for="{{ field.id_for_label }}">
+	{{ field.label }}</label>
+	<div class="col-xs-10">
+	{{ field }}
+	<span class="help-block">{{ field.errors }}</span>
+	</div>	
+</div>
+{% else %}
+{{ field.as_hidden }}
+{% endif %}
+{% endfor %}
+<div class="form-group">
+	<div class="col-xs-offset-2 col-xs-10">
+	<input class="btn btn-primary" type="submit" value="Done" />
+	<input type="hidden" id="id_state" name="state" value="0"/>
+	</div>
+</div>
+</form>
+</div>
+{% endif %}
+
+<a href="/govhack2015">Back</a>

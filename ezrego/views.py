@@ -94,6 +94,43 @@ def sellerintent(request):
 
     return render(request, 'ezrego/sell.html', {'form': form})
 
+@login_required(login_url='/govhack2015/loginv')
+def buyavehicle(request):
+    if request.method == 'POST':
+        if request.POST.has_key('state'):
+            if request.POST['state'] == '0':
+                form = BuyerMatchForm(request.POST)
+                if form.is_valid():
+                    try:
+                        t = VehicleTransfer.objects.get(transfer_code=form.cleaned_data['transfer_code'])
+                        return render(request, 'ezrego/buyavehicle.html', {'state1':1, 'tcode':t.transfer_code})
+                    except:
+                        t = {}
+                        return render(request, 'ezrego/buyavehicle.html', {'state0':1, 'form':form, 'failed':1})
+
+                else:
+                    form = BuyerMatchForm()
+
+                return render(request, 'ezrego/buyavehicle.html', {'state0':1, 'form': form})
+
+            elif request.POST['state'] == '1':
+                form = BuyerCompletionForm(request.POST)
+                uid = request.user.id
+                u = Person.objects.get(user_auth_id=uid)
+                if form.is_valid():
+                    # Already a valid transfer code
+                    valid_tcode = form.cleaned_data['transfer_code']
+                    t = VehicleTransfer.objects.get(transfer_code=valid_tcode)
+                    t.buyer = u
+                    t.save()
+
+                    s = Person.objects.get(id=t.seller.id)
+                    return render(request, 'ezrego/buyavehicle.html', {'state2':1, 'transfer':t, 'seller':s})
+                else:
+                    return render(request, 'ezrego/buyavehicle.html', {'state1':1, 'form':form})
+
+    form = BuyerMatchForm(initial={'state':'0'})
+    return render(request, 'ezrego/buyavehicle.html', {'state0':1, 'form':form})
 
 def register(request):
     form = PersonForm()
