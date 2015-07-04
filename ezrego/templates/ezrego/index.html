@@ -1,6 +1,7 @@
 <h1>EZRego</h1>
 
-{% if request.user %}
+{% if userloggedin.email %}
+<p>Welcome {{ userloggedin.email }}</p>
 
 <p><a href="{% url 'sellerintent' %}">Sell a vehicle</a></p>
 
@@ -8,6 +9,7 @@
 
 {% else %}
 
+<p><a href="{% url 'loginv' %}">Login to EZRego</a></p>
 <p><a href="{% url 'register' %}">Register for EZRego</a></p>
 
 {% endif %}

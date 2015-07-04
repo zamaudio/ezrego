@@ -2,20 +2,21 @@ from django import forms
 
 class PersonForm(forms.Form):
     personalorbusiness = forms.BooleanField(label="Personal or Company?", required=False, widget=forms.CheckboxInput())
-    surname = forms.CharField()
-    firstname = forms.CharField()
-    companyname = forms.CharField()
-    acn = forms.CharField()
+    surname = forms.CharField(required=False)
+    firstname = forms.CharField(required=False)
+    companyname = forms.CharField(required=False)
+    acn = forms.CharField(required=False)
     licencenumber = forms.CharField()
     dob = forms.DateField()
     homeaddress1 = forms.CharField()
-    homeaddress1 = forms.CharField()
-    homeaddresspostcode = forms.IntegerField()
-    postaladdress1 = forms.CharField()
-    postaladdress2 = forms.CharField()
-    postaladdresspostcode = forms.IntegerField()
-    phone = forms.IntegerField()
+    homeaddress2 = forms.CharField()
+    homeaddresspostcode = forms.CharField()
+    postaladdress1 = forms.CharField(required=False)
+    postaladdress2 = forms.CharField(required=False)
+    postaladdresspostcode = forms.CharField(required=False)
+    phone = forms.CharField()
     email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput())
 
 class SellerForm(forms.Form):
     current_rego = forms.CharField()
@@ -43,7 +44,7 @@ class BuyerMatchForm(forms.Form):
 class BuyerCompletionForm(forms.Form):
     garageaddress1 = forms.CharField()
     garageaddress2 = forms.CharField()
-    garageaddresspostcode = forms.IntegerField()
+    garageaddresspostcode = forms.CharField()
     total_fee = forms.IntegerField()
     agreetoterms = forms.BooleanField(required=True)
 

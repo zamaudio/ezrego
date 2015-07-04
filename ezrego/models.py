@@ -29,28 +29,28 @@ class Person(models.Model):
     dob = models.DateField()
     homeaddress1 = models.CharField(max_length=64)
     homeaddress2 = models.CharField(max_length=64)
-    homeaddresspostcode = models.IntegerField()
+    homeaddresspostcode = models.CharField(max_length=4)
     postaladdress1 = models.CharField(max_length=64)
     postaladdress2 = models.CharField(max_length=64)
-    postaladdresspostcode = models.IntegerField()
+    postaladdresspostcode = models.CharField(max_length=4)
     garageaddress1 = models.CharField(max_length=64)
     garageaddress2 = models.CharField(max_length=64)
-    garageaddresspostcode = models.IntegerField()
-    phone = models.IntegerField()
+    garageaddresspostcode = models.CharField(max_length=4)
+    phone = models.CharField(max_length=16)
     email = models.EmailField()
     def __str__(self):
         return (self.phone)
 
 class VehicleTransfer(models.Model):
     seller = models.ForeignKey(Person)
-    buyer = models.ForeignKey(Person, related_name='buyer')
+    buyer = models.ForeignKey(Person, related_name='buyer', null=True)
     vehicle = models.ForeignKey(Vehicle)
     submitted_timestamp = models.DateTimeField(auto_now_add=True)
     market_value = models.IntegerField()
     date_of_sale = models.DateField()
     transfer_fee = models.IntegerField()
     duty_fee = models.IntegerField()
+    transfer_code = models.CharField(max_length=9)
     def __str__(self):
         return (self.date_of_sale)
-
 

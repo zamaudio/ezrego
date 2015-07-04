@@ -7,13 +7,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.forms import AuthenticationForm
+import hashlib
 
 from .models import Vehicle, Person, VehicleTransfer
 from .forms import SellerForm, PersonForm, BuyerMatchForm, BuyerCompletionForm
 
 def index(request):
     ok = 'ezrego/index.html'
-    return render(request, ok)
+    if request.user:
+        return render(request, ok, {'userloggedin':request.user})
+    else:
+        return render(request, ok)
 
 def loginv(request):
     form = AuthenticationForm(request)
@@ -23,7 +27,7 @@ def loginv(request):
         user = authenticate(username=email, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/govhack2015')
         else:
             return render(request, 'registration/login.html', {'badlogin':1, 'form':form})
     else:
@@ -32,7 +36,7 @@ def loginv(request):
 def logoutv(request):
     if request.user.is_authenticated():
         logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/govhack2015')
 
 @login_required(login_url='/govhack2015/loginv')
 def buyavehicle(request):
@@ -42,17 +46,49 @@ def buyavehicle(request):
     return render(request, tmp)
 
 @login_required(login_url='/govhack2015/loginv')
+def sellerthankyou(request):
+    tmp = 'ezrego/sellerthankyou.html'
+    uid = request.user.id
+    u = Person.objects.get(user_auth_id=uid)
+    return render(request, tmp, {'seller':u})
+
+@login_required(login_url='/govhack2015/loginv')
 def sellerintent(request):
     if request.method == 'POST':
         uid = request.user.id
         u = Person.objects.get(user_auth_id=uid)
         form = SellerForm(request.POST)
         if form.is_valid():
-            person = Person(
-                personalorbusiness=form.cleaned_data['personalorbusiness']
-                )
-            person.save()
-            return HttpResponseRedirect('sellerthankyou')
+            v = Vehicle(
+                current_rego=form.cleaned_data['current_rego'],
+                rego_expiry=form.cleaned_data['rego_expiry'],
+                vehicle_year=form.cleaned_data['vehicle_year'],
+                vehicle_model=form.cleaned_data['vehicle_model'],
+                vehicle_bodytype=form.cleaned_data['vehicle_bodytype'],
+                vehicle_vin=form.cleaned_data['vehicle_vin'],
+                is_pre1989=form.cleaned_data['is_pre1989'],
+                is_written_off=form.cleaned_data['is_written_off'],
+                is_rwc_attached=form.cleaned_data['is_rwc_attached'],
+                rwc_serialnumber=form.cleaned_data['rwc_serialnumber'],
+                rwc_issuedate=form.cleaned_data['rwc_issuedate'],
+                rwc_testerlicence=form.cleaned_data['rwc_testerlicence']
+            )
+            v.save()
+
+            tcode=hashlib.md5("".join([str(v.vehicle_vin), str(u.email)])).hexdigest()
+            tcode=tcode[1:9]
+
+            t = VehicleTransfer(
+                seller=u,
+                vehicle=v,
+                market_value=form.cleaned_data['market_value'],
+                date_of_sale=form.cleaned_data['date_of_sale'],
+                transfer_fee=form.cleaned_data['transfer_fee'],
+                duty_fee=form.cleaned_data['duty_fee'],
+                transfer_code=tcode
+            )
+            t.save()
+            return render(request, 'ezrego/sellerthankyou.html', {'tcode':t.transfer_code})
     else:
         form = SellerForm()
 
@@ -98,6 +134,7 @@ def register(request):
                 email=p15,
             )
             AuthUser.objects.create_user(
+                username=p15,
                 email=p15,
                 password=p16,
             )
