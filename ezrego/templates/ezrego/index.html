@@ -1,3 +1,5 @@
+{% include 'ezrego/header.html' %}
+
 <h1>EZRego</h1>
 
 {% if userloggedin.email %}
@@ -13,3 +15,5 @@
 <p><a href="{% url 'register' %}">Register for EZRego</a></p>
 
 {% endif %}
+
+{% include 'ezrego/footer.html' %}
