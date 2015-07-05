@@ -102,16 +102,18 @@ def buyavehicle(request):
                 form = BuyerMatchForm(request.POST)
                 if form.is_valid():
                     try:
-                        t = VehicleTransfer.objects.get(transfer_code=form.cleaned_data['transfer_code'])
-                        return render(request, 'ezrego/buyavehicle.html', {'state1':1, 'tcode':t.transfer_code})
+                        tcode = form.cleaned_data['transfer_code']
+                        t = VehicleTransfer.objects.get(transfer_code=tcode)
+                        form = BuyerCompletionForm(initial={'state':'1', 'transfer_code':tcode})
+                        return render(request, 'ezrego/buyavehicle.html', {'state1':1, 'form':form })
                     except:
                         t = {}
                         return render(request, 'ezrego/buyavehicle.html', {'state0':1, 'form':form, 'failed':1})
 
                 else:
-                    form = BuyerMatchForm()
+                    form = BuyerMatchForm(initial={'state':'0'})
 
-                return render(request, 'ezrego/buyavehicle.html', {'state0':1, 'form': form})
+                return render(request, 'ezrego/buyavehicle.html', {'state0':1, 'form': form, 'failed':1})
 
             elif request.POST['state'] == '1':
                 form = BuyerCompletionForm(request.POST)
@@ -125,8 +127,9 @@ def buyavehicle(request):
                     t.save()
 
                     s = Person.objects.get(id=t.seller.id)
-                    return render(request, 'ezrego/buyavehicle.html', {'state2':1, 'transfer':t, 'seller':s})
+                    return render(request, 'ezrego/buyavehicle.html', {'state2':1, 'form':form, 'transfer':t, 'seller':s})
                 else:
+                    form = BuyerCompletionForm(initial={'state':'1'})
                     return render(request, 'ezrego/buyavehicle.html', {'state1':1, 'form':form})
 
     form = BuyerMatchForm(initial={'state':'0'})

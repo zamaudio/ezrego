@@ -40,7 +40,7 @@ class SellerForm(forms.Form):
 
 class BuyerMatchForm(forms.Form):
     transfer_code = forms.CharField()
-    state = forms.HiddenInput()
+    state = forms.CharField(widget=forms.HiddenInput())
 
 class BuyerCompletionForm(forms.Form):
     garageaddress1 = forms.CharField()
@@ -48,6 +48,6 @@ class BuyerCompletionForm(forms.Form):
     garageaddresspostcode = forms.CharField()
     total_fee = forms.IntegerField()
     agreetoterms = forms.BooleanField(required=True)
-    state = forms.HiddenInput()
-    transfer_code = forms.HiddenInput()
+    state = forms.CharField(widget=forms.HiddenInput())
+    transfer_code = forms.CharField(widget=forms.HiddenInput())
 
